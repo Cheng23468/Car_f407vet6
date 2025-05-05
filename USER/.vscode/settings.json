@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.nfo": "plaintext",
+        "balance.h": "c",
+        "pid.h": "c"
+    }
+}

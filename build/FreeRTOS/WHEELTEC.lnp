@@ -1,0 +1,1 @@
+--cpu Cortex-M4.fp --scatter "c:/Workspace/STM32/Car_f407vet6/build/FreeRTOS/WHEELTEC.sct" --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols --info sizes --info totals --info unused --info veneers --list .\build\FreeRTOS\WHEELTEC.map
