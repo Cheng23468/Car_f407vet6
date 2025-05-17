@@ -27,4 +27,6 @@ typedef struct {
     FSM_State_t nextState;   // 下一个状态
 } FSM_Table_t;
 
+extern FSM_Table_t Car_Task_FSM[];
+
 #endif

@@ -40,11 +40,11 @@ u8 CAN1_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;//复用功能
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;//上拉
-	GPIO_Init(GPIOD, &GPIO_InitStructure);//初始化PB8 PB9
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &GPIO_InitStructure);//初始化PD0 PD1
 //	//引脚复用映射配置
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource0,GPIO_AF_CAN1); //GPIOB8复用为CAN1
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource1,GPIO_AF_CAN1); //GPIOB9复用为CAN1
+	GPIO_PinAFConfig(GPIOD,GPIO_PinSource0,GPIO_AF_CAN1); //GPIOD0复用为CAN1
+	GPIO_PinAFConfig(GPIOD,GPIO_PinSource1,GPIO_AF_CAN1); //GPIOD1复用为CAN1
 
 	CAN1->MCR=0x0000;	//Exit sleep mode (setting all bits to 0 at the same time) //退出睡眠模式(同时设置所有位为0)
 	CAN1->MCR|=1<<0;	//Request CAN1 to enter initialization mode //请求CAN1进入初始化模式
@@ -314,26 +314,30 @@ void CAN1_RX0_IRQHandler(void)
 	u8 temp_rxbuf[8];
 
  	CAN1_Rx_Msg(0,&id,&ide,&rtr,&len,temp_rxbuf);
-	if(id==0x181)
-	{
-		float Vz;
-		CAN_ON_Flag=1, PS2_ON_Flag=0,Remote_ON_Flag=0,APP_ON_Flag=0,Usart1_ON_Flag=0,Usart5_ON_Flag=0;
-    command_lost_count=0; //CAN/串口控制命令丢失计数清零
 
-		//Calculate the three-axis target velocity, unit: m/s
-		//计算三轴目标速度，单位：m/s
-		Move_X=((float)((short)((temp_rxbuf[0]<<8)+(temp_rxbuf[1]))))/1000; 
-		Move_Y=((float)((short)((temp_rxbuf[2]<<8)+(temp_rxbuf[3]))))/1000;
-		Vz    =((float)((short)((temp_rxbuf[4]<<8)+(temp_rxbuf[5]))))/1000;
-		if(Car_Mode==Akm_Car)
-		{
-			Move_Z=Vz_to_Akm_Angle(Move_X, Vz);
-		}
-		else
-		{
-			Move_Z=((float)((short)((temp_rxbuf[4]<<8)+(temp_rxbuf[5]))))/1000;
-		}
+	if(id == DM_IMU_MST_ID) {
+		IMU_UpdateData(temp_rxbuf);
 	}
+	// if(id==0x181)
+	// {
+	// 	float Vz;
+	// 	CAN_ON_Flag=1, PS2_ON_Flag=0,Remote_ON_Flag=0,APP_ON_Flag=0,Usart1_ON_Flag=0,Usart5_ON_Flag=0;
+    // command_lost_count=0; //CAN/串口控制命令丢失计数清零
+
+	// 	//Calculate the three-axis target velocity, unit: m/s
+	// 	//计算三轴目标速度，单位：m/s
+	// 	Move_X=((float)((short)((temp_rxbuf[0]<<8)+(temp_rxbuf[1]))))/1000; 
+	// 	Move_Y=((float)((short)((temp_rxbuf[2]<<8)+(temp_rxbuf[3]))))/1000;
+	// 	Vz    =((float)((short)((temp_rxbuf[4]<<8)+(temp_rxbuf[5]))))/1000;
+	// 	if(Car_Mode==Akm_Car)
+	// 	{
+	// 		Move_Z=Vz_to_Akm_Angle(Move_X, Vz);
+	// 	}
+	// 	else
+	// 	{
+	// 		Move_Z=((float)((short)((temp_rxbuf[4]<<8)+(temp_rxbuf[5]))))/1000;
+	// 	}
+	// }
 }
 #endif
 
@@ -406,7 +410,7 @@ u8 CAN1_Send_Num(u32 id,u8* msg)
 {
 	u8 mbox;
 	u16 i=0;	  	 						       
-  mbox=CAN1_Tx_Msg(id,0,0,8,msg);   
+  	mbox=CAN1_Tx_Msg(id,0,0,8,msg);   
 	while((CAN1_Tx_Staus(mbox)!=0X07)&&(i<0XFFF))i++; //Waiting for the end of sending //等待发送结束
 	if(i>=0XFFF)return 1;	//Send failure //发送失败
 	return 0;

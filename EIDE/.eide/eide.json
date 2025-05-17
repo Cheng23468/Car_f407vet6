@@ -54,6 +54,9 @@
           },
           {
             "path": "../HARDWARE/usartx.c"
+          },
+          {
+            "path": "../HARDWARE/dm_imu.c"
           }
         ],
         "folders": []
@@ -222,6 +225,9 @@
           },
           {
             "path": "../APP/car_control_task.c"
+          },
+          {
+            "path": "../APP/imu_task.c"
           }
         ],
         "folders": []
@@ -351,17 +357,12 @@
         },
         "options": "null"
       },
-      "uploader": "STLink",
+      "uploader": "OpenOCD",
       "uploadConfig": {
         "bin": "",
-        "proType": "SWD",
-        "resetMode": "default",
-        "runAfterProgram": true,
-        "speed": 4000,
-        "address": "0x8000000",
-        "elFile": "None",
-        "optionBytes": ".eide/freertos.st.option.bytes.ini",
-        "otherCmds": ""
+        "target": "stm32f4x",
+        "interface": "cmsis-dap",
+        "baseAddr": "0x08000000"
       },
       "uploadConfigMap": {
         "JLink": {

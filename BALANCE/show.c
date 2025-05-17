@@ -143,11 +143,19 @@ void oled_show(void)
 		 {
 			 //The Akm_Car, Diff_Car and Tank_Car show Z-axis angular velocity
 			 //阿克曼、差速、坦克小车显示Z轴角速度
-			 OLED_ShowString(00,10,"GYRO_Z:");
-			 if( gyro[2]<0)  OLED_ShowString(60,10,"-"),
-											 OLED_ShowNumber(75,10,-gyro[2],5,12);
-			 else            OLED_ShowString(60,10,"+"),
-											 OLED_ShowNumber(75,10, gyro[2],5,12);			
+			//  OLED_ShowString(00,10,"GYRO_Z:");
+			//  if( gyro[2]<0)  OLED_ShowString(60,10,"-"),
+			// 								 OLED_ShowNumber(75,10,-gyro[2],5,12);
+			//  else            OLED_ShowString(60,10,"+"),
+			// 								 OLED_ShowNumber(75,10, gyro[2],5,12);			
+			OLED_ShowString(0,10,"Yaw:");
+			if (Diff_Car_Odometry.Odometry.theta < 0) {
+				OLED_ShowString(60, 10, "-");
+				OLED_ShowNumber(75, 10, (uint32_t)(-Diff_Car_Odometry.Odometry.theta*57.29578f), 5, 12);
+			} else {
+				OLED_ShowString(60, 10, "+");
+				OLED_ShowNumber(75, 10, (uint32_t)(Diff_Car_Odometry.Odometry.theta*57.29578f), 5, 12);
+			}	
 		 }	 
 		 //The second line of the display displays the content//
 		 //显示屏第2行显示内容//
@@ -268,16 +276,19 @@ void oled_show(void)
 		 {
 			 // The Diff_Car and Tank_Car displays the PWM values of the left and right motors
 			 //差速小车、履带车显示左右电机的PWM的数值
-															 OLED_ShowString(00,40,"MA");
-			 if( MOTOR_A.Motor_Pwm<0)OLED_ShowString(20,40,"-"),
-															 OLED_ShowNumber(30,40,-MOTOR_A.Motor_Pwm,4,12);
-			 else                 	 OLED_ShowString(20,40,"+"),
-															 OLED_ShowNumber(30,40, MOTOR_A.Motor_Pwm,4,12); 
-															 OLED_ShowString(60,40,"MB");
-			 if(MOTOR_B.Motor_Pwm<0) OLED_ShowString(80,40,"-"),
-															 OLED_ShowNumber(90,40,-MOTOR_B.Motor_Pwm,4,12);
-			 else                 	 OLED_ShowString(80,40,"+"),
-															 OLED_ShowNumber(90,40, MOTOR_B.Motor_Pwm,4,12);
+			// 												 OLED_ShowString(00,40,"MA");
+			//  if( MOTOR_A.Motor_Pwm<0)OLED_ShowString(20,40,"-"),
+			// 												 OLED_ShowNumber(30,40,-MOTOR_A.Motor_Pwm,4,12);
+			//  else                 	 OLED_ShowString(20,40,"+"),
+			// 												 OLED_ShowNumber(30,40, MOTOR_A.Motor_Pwm,4,12); 
+			// 												 OLED_ShowString(60,40,"MB");
+			//  if(MOTOR_B.Motor_Pwm<0) OLED_ShowString(80,40,"-"),
+			// 												 OLED_ShowNumber(90,40,-MOTOR_B.Motor_Pwm,4,12);
+			//  else                 	 OLED_ShowString(80,40,"+"),
+			// 												 OLED_ShowNumber(90,40, MOTOR_B.Motor_Pwm,4,12);
+
+			OLED_ShowString(00,40,"Park:");
+			OLED_ShowNumber(40,40,CarControl.parking_spot,1,12);
 		 }
 		 //Line 5 of the display displays the content//
 		 //显示屏第5行显示内容//

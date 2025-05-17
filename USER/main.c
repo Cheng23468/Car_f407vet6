@@ -59,6 +59,7 @@ void start_task(void *pvParameters)
 	// xTaskCreate(data_task,     "DATA_task",     DATA_STK_SIZE,     NULL, DATA_TASK_PRIO,     NULL);	//Usartx3, Usartx1 and CAN send data task //串口3、串口1、CAN发送数据任务
 	xTaskCreate(motor_task, "motor_task", MOTOR_STK_SIZE, NULL, MOTOR_TASK_PRIO, NULL);							// Motor control task //主程序 电机控制任务
 	xTaskCreate(car_control_task, "car_control_task", CAR_CONTROL_STK_SIZE, NULL, CAR_CONTROL_TASK_PRIO, NULL); // Car control task //小车控制任务
+	// xTaskCreate(imu_task, "IMU_task", IMU_STK_SIZE, NULL, IMU_TASK_PRIO, NULL); // IMU data processing task //IMU数据处理任务
 
 	vTaskDelete(StartTask_Handler); // Delete the start task //删除开始任务
 

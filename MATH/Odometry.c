@@ -69,7 +69,7 @@ void DiffOdometry_Init(Diff_Odometry_t *odom, float wheel_base) {
  * @param imu_angular_velocity 来自 IMU 的角速度（单位：弧度/秒）。
  * @param dt 更新的时间步长（单位：秒）。
  */
-void DiffOdometry_UpdateWithIMU(Diff_Odometry_t *odom, float left_wheel_speed, float right_wheel_speed, float imu_angular_velocity, float dt) {
+void DiffOdometry_UpdateWith_Wheel_IMU(Diff_Odometry_t *odom, float left_wheel_speed, float right_wheel_speed, float imu_angular_velocity, float dt) {
     // 更新左右轮速度
     odom->left_wheel_speed = left_wheel_speed;
     odom->right_wheel_speed = right_wheel_speed;
@@ -82,6 +82,28 @@ void DiffOdometry_UpdateWithIMU(Diff_Odometry_t *odom, float left_wheel_speed, f
 
     // 调用里程计更新函数
     Odometry_Update(&odom->Odometry, v, omega, dt);
+}
+
+/**
+ * @brief 仅使用IMU（加速度计和陀螺仪）更新里程计
+ * 
+ * @param odom 指向 Diff_Odometry_t 结构体的指针
+ * @param linear_accel_x 车体坐标系下的x轴加速度（单位：m/s^2）
+ * @param imu_angular_velocity IMU角速度（单位：rad/s）
+ * @param dt 时间步长（单位：秒）
+ */
+void DiffOdometry_UpdateWith_IMU(Diff_Odometry_t *odom, float linear_accel_x, float imu_angular_velocity, float dt) {
+    // 静态变量保存上一时刻的线速度
+    static float last_linear_velocity = 0.0f;
+
+    // 积分加速度得到线速度
+    float linear_velocity = last_linear_velocity + linear_accel_x * dt;
+
+    // 更新上一时刻速度
+    last_linear_velocity = linear_velocity;
+
+    // 只用IMU数据更新
+    Odometry_Update(&odom->Odometry, linear_velocity, imu_angular_velocity, dt);
 }
 
 /**

@@ -22,7 +22,8 @@ typedef struct {
 extern Diff_Odometry_t Diff_Car_Odometry;
 
 void DiffOdometry_Init(Diff_Odometry_t *odom, float wheel_base);
-void DiffOdometry_UpdateWithIMU(Diff_Odometry_t *odom, float left_wheel_speed, float right_wheel_speed, float imu_angular_velocity, float dt);
+void DiffOdometry_UpdateWith_Wheel_IMU(Diff_Odometry_t *odom, float left_wheel_speed, float right_wheel_speed, float imu_angular_velocity, float dt);
+void DiffOdometry_UpdateWith_IMU(Diff_Odometry_t *odom, float linear_accel_x, float imu_angular_velocity, float dt);
 void DiffOdometry_Update(Diff_Odometry_t *odom, float left_wheel_speed, float right_wheel_speed, float dt);
 
 #endif // ODOMETRY_H

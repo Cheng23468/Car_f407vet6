@@ -26,7 +26,7 @@ void data_task(void *pvParameters)
 		// USART1_SEND(); // Serial port 1 sends data //串口1发送数据
 		// USART3_SEND(); // Serial port 3 (ROS) sends data  //串口3(ROS)发送数据
 		// USART5_SEND(); // Serial port 5 sends data //串口5发送数据
-		CAN_SEND();	   // CAN send data //CAN发送数据
+		// CAN_SEND();	   // CAN send data //CAN发送数据
 	}
 }
 /**************************************************************************
@@ -957,4 +957,23 @@ void UART_Transmit(USART_TypeDef *USART, uint8_t *str, uint16_t size)
 }
 
 
+/**
+ * @brief  通过UART5发送格式化的调试信息
+ * @param  format: printf风格的格式化字符串
+ * @param  ...: 用于格式化字符串的附加参数
+ * @retval 无
+ * @note   此函数使用提供的参数格式化字符串并通过UART5发送，适用于调试用途
+ * @note   在使用此函数前，请确保UART5已正确初始化
+ */
+void Debug_Printf(const char *format, ...)
+{
+	va_list args;
+	char buffer[256]; // 根据需要调整缓冲区大小
+
+	va_start(args, format);
+	vsnprintf(buffer, sizeof(buffer), format, args);
+	va_end(args);
+
+	UART_Transmit(UART5, (uint8_t *)buffer, strlen(buffer));
+}
 

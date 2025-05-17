@@ -160,7 +160,11 @@ void systemInit(void)
 
 	// Initialize the CAN communication interface
 	// CAN通信接口初始化
-	CAN1_Mode_Init(1, 7, 6, 3, 0);
+	uint8_t can1_init_temp;
+	can1_init_temp = CAN1_Mode_Init(1, 7, 6, 3, 0);
+	if(can1_init_temp != 0) {
+		Debug_Printf("CAN1 Mode Init Failed!\r\nreturn %d\r\n",can1_init_temp);
+	}
 
 	// According to the tap position of the potentiometer, determine which type of car needs to be matched,
 	// and then initialize the corresponding parameters

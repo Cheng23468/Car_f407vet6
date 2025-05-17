@@ -78,6 +78,7 @@ void usart2_send(u8 data);
 void usart3_send(u8 data);
 void usart5_send(u8 data);
 void UART_Transmit(USART_TypeDef *USART, uint8_t *str, uint16_t size);
+void Debug_Printf(const char *format, ...);
 
 u8 Check_Sum(unsigned char Count_Number,unsigned char Mode);
 
